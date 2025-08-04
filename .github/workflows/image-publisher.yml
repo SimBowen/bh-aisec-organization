@@ -63,7 +63,6 @@ jobs:
         env:
           SUCCESS: ${{ steps.detect.outcome != 'failure' }}
         run: |
-          set -euo pipefail
           echo "outcome=$([ "$SUCCESS" == "true" ] && echo "success" || echo "failure")" >> "$GITHUB_OUTPUT"
 
   # evaluate evaluates the publish policy.
@@ -115,7 +114,6 @@ jobs:
           IMAGE: "${{ inputs.image }}@${{ inputs.digest }}"
         working-directory: policies/publish
         run: |
-          set -euo pipefail
           slsa-policy publish evaluate org.json . "${IMAGE}" "${ENVIRONMENT}"
           # NOTE: We can verify with:
           # cosign verify-attestation "${IMAGE}" --certificate-oidc-issuer https://token.actions.githubusercontent.com --certificate-identity "${PUBLISHER_ID}" --type https://slsa.dev/publish/v0.1 | jq -r '.payload' | base64 -d | jq
@@ -124,7 +122,6 @@ jobs:
         env:
           SUCCESS: ${{ steps.checkout.outcome != 'failure' && steps.install.outcome != 'failure' && steps.login.outcome != 'failure' && steps.evaluate.outcome != 'failure' }}
         run: |
-          set -euo pipefail
           echo "outcome=$([ "$SUCCESS" == "true" ] && echo "success" || echo "failure")" >> "$GITHUB_OUTPUT"
 
   # final fails or succeeds based on the value of `inputs.continue-on-error`
@@ -143,6 +140,5 @@ jobs:
           SUCCESS: ${{ needs.detect-env.outputs.outcome != 'failure' && needs.evaluate.outputs.outcome != 'failure' }}
           CONTINUE: ${{ inputs.continue-on-error }}
         run: |
-          set -euo pipefail
           echo "outcome=$([ "$SUCCESS" == "true" ] && echo "success" || echo "failure")" >> "$GITHUB_OUTPUT"
-          [ "$CONTINUE" == "true" ] || [ "$SUCCESS" == "true" ] || exit 27
+          [ "$CONTINUE" == "true" ] || [ "$SUCCESS" == "true" ] || exit 1
