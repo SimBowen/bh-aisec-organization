@@ -1,26 +1,28 @@
 {
-    "format":1,
+    "format": 1,
     "protection": {
-        "google_service_account":"name@prod-project-id.iam.gserviceaccount.com"
+        "google_service_account": "name@prod-project-id.iam.gserviceaccount.com"
     },
     "build": {
         "require_slsa_level": 3
     },
-    "packages":[
+    "packages": [
         {
             "name": "docker.io/htxbowen/bh-aisec-project1-echo-server",
-            "environment": {
-                "any_of": [
-                    "prod"
-                ]
+            "environments": {
+                "prod": {
+                    "publisher": "https://github.com/SimBowen/bh-aisec-organization/.github/workflows/image-publisher.yml@refs/heads/main",
+                    "source": "github.com/SimBowen/bh-aisec-project1"
+                }
             }
         },
         {
             "name": "docker.io/htxbowen/bh-aisec-model-inference",
-            "environment": {
-                "any_of": [
-                    "prod"
-                ]
+            "environments": {
+                "prod": {
+                    "publisher": "https://github.com/SimBowen/bh-aisec-organization/.github/workflows/image-publisher.yml@refs/heads/main",
+                    "source": "github.com/SimBowen/bh-aisec-model-inference"
+                }
             }
         }
     ]
